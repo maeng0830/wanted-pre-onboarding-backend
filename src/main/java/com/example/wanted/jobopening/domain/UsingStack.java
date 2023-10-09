@@ -1,4 +1,4 @@
-package com.example.wanted.jopopening.domain;
+package com.example.wanted.jobopening.domain;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -23,14 +23,9 @@ public class UsingStack {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@JoinColumn(name = "jop_opening_id")
+	@JoinColumn(name = "job_opening_id")
 	@ManyToOne(fetch = FetchType.LAZY)
-	private JopOpening jopOpening;
+	private JobOpening jobOpening;
 
 	private String stackName;
-
-	public void mappingJopOpening(JopOpening jopOpening) {
-		this.jopOpening = jopOpening;
-		jopOpening.getUsingStacks().add(this);
-	}
 }

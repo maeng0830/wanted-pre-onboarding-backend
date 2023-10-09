@@ -1,7 +1,8 @@
-package com.example.wanted.jopopening.domain;
+package com.example.wanted.jobopening.domain;
 
 import com.example.wanted.company.domain.Company;
-import com.example.wanted.jopopening.domain.model.WorkPlace;
+import com.example.wanted.jobopening.domain.model.WorkPlace;
+import com.example.wanted.jobopening.domain.model.dto.request.JobOpeningRequest;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Embedded;
@@ -24,7 +25,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class JopOpening {
+public class JobOpening {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -45,6 +46,14 @@ public class JopOpening {
 	private String content;
 
 	@Builder.Default
-	@OneToMany(mappedBy = "jopOpening")
+	@OneToMany(mappedBy = "jobOpening")
 	private List<UsingStack> usingStacks = new ArrayList<>();
+
+	public void modifyJopOpening(JobOpeningRequest jobOpeningRequest, List<UsingStack> usingStacks) {
+		this.workPlace = jobOpeningRequest.getWorkPlace();
+		this.position = jobOpeningRequest.getPosition();
+		this.reward = jobOpeningRequest.getReward();
+		this.content = jobOpeningRequest.getContent();
+		this.usingStacks = usingStacks;
+	}
 }

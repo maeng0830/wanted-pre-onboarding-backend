@@ -1,4 +1,4 @@
-package com.example.wanted.jopopening.domain.model;
+package com.example.wanted.jobopening.domain.model;
 
 import javax.persistence.Embeddable;
 import lombok.Builder;

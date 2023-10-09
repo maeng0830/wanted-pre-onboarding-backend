@@ -1,6 +1,6 @@
-package com.example.wanted.jopopening.domain.model.dto;
+package com.example.wanted.jobopening.domain.model.dto.request;
 
-import com.example.wanted.jopopening.domain.model.WorkPlace;
+import com.example.wanted.jobopening.domain.model.WorkPlace;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class JopOpeningRequest {
+public class JobOpeningRegister implements JobOpeningRequest {
 
 	private Long companyId;
 	private WorkPlace workPlace;
