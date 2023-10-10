@@ -12,6 +12,7 @@ public class MemberService {
 
 	private final MemberRepository memberRepository;
 
+	// 회원 데이터 등록 기능
 	public MemberDto join() {
 		return MemberDto.from(memberRepository.save(new Member()));
 	}

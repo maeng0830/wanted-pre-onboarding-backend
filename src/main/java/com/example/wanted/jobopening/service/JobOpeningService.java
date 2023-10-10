@@ -32,12 +32,14 @@ public class JobOpeningService {
 	private final UsingStackRepository usingStackRepository;
 	private final CompanyRepository companyRepository;
 
+	// 채용 공고 등록 기능
 	@Transactional
 	public JobOpeningResponse register(JobOpeningRegister jobOpeningRegister) {
 		// 회사 조회
 		Company company = companyRepository.findById(jobOpeningRegister.getCompanyId())
 				.orElseThrow(() -> new ApiException(CompanyExceptionCode.NOT_EXIST_COMPANY));
 
+		// 채용 공고 데이터 생성 및 저장
 		JobOpening jobOpening = JobOpening.builder()
 				.company(company)
 				.workPlace(jobOpeningRegister.getWorkPlace())
@@ -48,12 +50,13 @@ public class JobOpeningService {
 
 		jobOpeningRepository.save(jobOpening);
 
-		// usingStack 데이터 생성을 포함한 jopOpening 데이터 수정
+		// usingStack 데이터 생성 및 jopOpening 데이터와 매핑
 		modifyJopOpeningWithUsingStack(jobOpening, jobOpeningRegister);
 
 		return JobOpeningResponse.from(jobOpening);
 	}
 
+	// 채용 공고 수정 기능
 	@Transactional
 	public JobOpeningResponse modify(Long jopOpeningId, JobOpeningModify jobOpeningModify) {
 		// 채용공고 조회
@@ -61,33 +64,43 @@ public class JobOpeningService {
 				.orElseThrow(() -> new ApiException(
 						NOT_EXIST_JOB_OPENING));
 
-		// 해당 채용공고의 usingStack 데이터 삭제
+		// 해당 채용공고와 매핑된 기존 usingStack 데이터 삭제
 		usingStackRepository.deleteByJobOpeningId(jopOpeningId);
 
-		// usingStack 데이터 생성을 포함한 jopOpening 데이터 수정
+		// usingStack 데이터 생성 및 jopOpening 데이터와 매핑
 		modifyJopOpeningWithUsingStack(jobOpening, jobOpeningModify);
 
 		return JobOpeningResponse.from(jobOpening);
 	}
 
+	// 채용 공고 삭제 기능
 	@Transactional
 	public void delete(Long jopOpeningId) {
+		// 해당 채용공고와 매핑된 usingStack 데이터 삭제
 		usingStackRepository.deleteByJobOpeningId(jopOpeningId);
+		// 채용공고 데이터 삭제
 		jobOpeningRepository.deleteById(jopOpeningId);
 	}
 
+	// 채용 공고 목록 조회 기능
+	// searchText가 null이면, 모든 채용 공고 목록 조회
+	// searchText가 null이 아니면, searchText가 회사명, 포지션, 사용 기술에 포함된 채용 공고 목록 조회
 	public Page<JobOpeningOutline> getJopOpenings(String searchText, Pageable pageable) {
+		// searchText에 따른 채용공고 데이터 조회
 		Page<JobOpening> jopOpenings = jobOpeningRepository.searchJopOpeningsBySearchText(
 				searchText, pageable);
 
 		return jopOpenings.map(JobOpeningOutline::from);
 	}
 
+	// 특정 채용공고 상세 조회 기능
 	public JobOpeningDetail getJopOpening(Long jopOpeningId) {
+		// 특정 채용공고 데이터 조회
 		JobOpening jobOpening = jobOpeningRepository.findById(jopOpeningId)
 				.orElseThrow(() -> new ApiException(
 						NOT_EXIST_JOB_OPENING));
 
+		// 해당 채용공고를 등록한 회사의 다른 채용공고 목록 조회
 		List<JobOpening> otherJobOpenings = jobOpeningRepository.findByCompany_Id(jobOpening.getCompany()
 				.getId());
 

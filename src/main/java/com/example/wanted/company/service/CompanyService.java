@@ -12,6 +12,7 @@ public class CompanyService {
 
 	private final CompanyRepository companyRepository;
 
+	// 회사 등록 기능
 	public CompanyDto register(String companyName) {
 		Company company = Company.builder()
 				.companyName(companyName)

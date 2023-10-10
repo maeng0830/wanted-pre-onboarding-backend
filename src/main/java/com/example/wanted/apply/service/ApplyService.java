@@ -23,23 +23,28 @@ public class ApplyService {
 	private final MemberRepository memberRepository;
 	private final JobOpeningRepository jobOpeningRepository;
 
+	// 채용 공고 지원 기능
+	// 중복 지원 시 예외 발생
 	public ApplyDto apply(ApplyDto applyDto) {
+		// 중복 지원 체크
 		applyRepository.findByMember_IdAndJobOpening_Id(applyDto.getMemberId(), applyDto.getJobOpeningId())
 				.ifPresent(apply -> {
 					throw new ApiException(ALREADY_APPLY);
 				});
 
+		// 회원 조회
 		Member member = memberRepository.findById(applyDto.getMemberId())
 				.orElseThrow(() -> new ApiException(NOT_EXIST_MEMBER));
 
+		// 채용 공고 조회
 		JobOpening jobOpening = jobOpeningRepository.findById(applyDto.getJobOpeningId())
 				.orElseThrow(() -> new ApiException(NOT_EXIST_JOB_OPENING));
 
+		// 채용 지원 데이터 생성 및 저장
 		Apply apply = Apply.builder()
 				.member(member)
 				.jobOpening(jobOpening)
 				.build();
-
 		applyRepository.save(apply);
 
 		return ApplyDto.from(apply);

@@ -13,6 +13,7 @@ public class ApplyController {
 
 	private final ApplyService applyService;
 
+	// 채용 공고 지원 API
 	@PostMapping("/api/apply")
 	public ApplyDto apply(@RequestBody ApplyDto applyDto) {
 		return applyService.apply(applyDto);

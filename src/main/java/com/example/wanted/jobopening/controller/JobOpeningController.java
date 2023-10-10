@@ -24,27 +24,34 @@ public class JobOpeningController {
 
 	private final JobOpeningService jobOpeningService;
 
+	// 채용 공고 등록 API
 	@PostMapping("/api/job-opening")
 	public JobOpeningResponse register(@RequestBody JobOpeningRegister jobOpeningRequest) {
 		return jobOpeningService.register(jobOpeningRequest);
 	}
 
+	// 채용 공고 수정 API
 	@PatchMapping("/api/job-opening/{jobOpeningId}")
 	public JobOpeningResponse modify(@PathVariable() Long jobOpeningId, @RequestBody
 	JobOpeningModify jobOpeningModify) {
 		return jobOpeningService.modify(jobOpeningId, jobOpeningModify);
 	}
 
+	// 채용 공고 삭제 API
 	@DeleteMapping("/api/job-opening/{jobOpeningId}")
 	public void delete(@PathVariable() Long jobOpeningId) {
 		jobOpeningService.delete(jobOpeningId);
 	}
 
+	// 채용 공고 목록 조회 API
+	// searchText 값이 null이면, 전체 채용 공고 목록 조회
+	// searchText 값이 null이 아니면, searchText가 회사명, 포지션, 사용 기술에 포함된 채용 공고 목록을 조회
 	@GetMapping("/api/job-opening")
 	public Page<JobOpeningOutline> getJobOpenings(@RequestParam String searchText, Pageable pageable) {
 		return jobOpeningService.getJopOpenings(searchText, pageable);
 	}
 
+	// 특정 채용 공고 상세 조회 API
 	@GetMapping("/api/job-opening/{jobOpeningId}")
 	public JobOpeningDetail getJobOpening(@PathVariable Long jobOpeningId) {
 		return jobOpeningService.getJopOpening(jobOpeningId);
